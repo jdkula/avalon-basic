@@ -68,7 +68,9 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
     let votesShown = false;
     let yesVotes: ReactNode | null = null;
     let noVotes: ReactNode | null = null;
+    let numVoting = 0;
     let thoseVoting: ReactNode | null = null;
+    let thoseNotVoting: ReactNode | null = null;
     let details: ReactNode | null = null;
     const roleSet: Set<string> = new Set();
     if (game?.status === 'poststart') {
@@ -93,10 +95,13 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
             </Box>
         );
 
-        thoseVoting = game.players
-            .filter((p) => p.vote !== null)
+        const voters = game.players.filter((p) => p.vote !== null).map((p) => p.name);
+        thoseVoting = voters.join(', ');
+        thoseNotVoting = game.players
+            .filter((p) => p.vote === null)
             .map((p) => p.name)
             .join(', ');
+        numVoting = voters.length;
         votesShown = game.voting !== null;
         if (votesShown && game.voting === 'private') {
             yesVotes = <Typography>{game.players.filter((p) => p.vote === true).length}</Typography>;
@@ -202,6 +207,8 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
         }
     };
 
+    const allVoted = numVoting === (game?.players.length ?? 0);
+
     return (
         <Container>
             <Card>
@@ -306,7 +313,26 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                                         <Box>No: {noVotes}</Box>
                                     </Box>
                                 ) : (
-                                    <Box m={2}>These people voted: {thoseVoting}</Box>
+                                    <Box m={2}>
+                                        <Box>
+                                            <Typography
+                                                variant="subtitle2"
+                                                color={allVoted ? 'textPrimary' : 'textSecondary'}
+                                            >
+                                                <strong>These people voted:</strong> {thoseVoting}
+                                            </Typography>
+                                        </Box>
+                                        {!allVoted && (
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle2"
+                                                    color={allVoted ? 'textPrimary' : 'textSecondary'}
+                                                >
+                                                    <strong>These people haven’t voted:</strong> {thoseNotVoting}
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
                                 )}
                             </Box>
                         </AccordionDetails>
