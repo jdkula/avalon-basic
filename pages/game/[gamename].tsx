@@ -68,10 +68,12 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
     let votesShown = false;
     let yesVotes: ReactNode | null = null;
     let noVotes: ReactNode | null = null;
+    let numVoting = 0;
     if (game?.status === 'poststart') {
         const you = game.players.find((p) => p.name === name);
         joined = !!you;
 
+        numVoting = game.players.filter((p) => p.vote !== null).length;
         votesShown = game.voting !== null;
         if (votesShown && game.voting === 'private') {
             yesVotes = <Typography>{game.players.filter((p) => p.vote === true).length}</Typography>;
@@ -117,12 +119,20 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
     }
 
     const leave = async () => {
-        await Axios.delete(`/api/${gamename}/${name}`);
-        mutate();
+        try {
+            await Axios.delete(`/api/${gamename}/${name}`);
+            mutate();
+        } catch (e) {
+            enqueueSnackbar(`Error: ${e.response.data}`, { variant: 'error' });
+        }
     };
     const join = async () => {
-        await Axios.post(`/api/${gamename}/${name}`);
-        mutate();
+        try {
+            await Axios.post(`/api/${gamename}/${name}`);
+            mutate();
+        } catch (e) {
+            enqueueSnackbar(`Error: ${e.response.data}`, { variant: 'error' });
+        }
     };
     const start = async () => {
         try {
@@ -197,7 +207,12 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                                             {joined ? 'Leave' : 'Join'}
                                         </Button>
                                     </Box>
-                                    <Button color="secondary" variant="contained" onClick={start}>
+                                    <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        onClick={start}
+                                        disabled={((game as any)?.players.length ?? 0) < 5}
+                                    >
                                         Start Game
                                     </Button>
                                 </Box>
@@ -254,12 +269,14 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                                         Reset Votes
                                     </Button>
                                 </Box>
-                                {votesShown && (
+                                {votesShown ? (
                                     <Box m={2}>
                                         <Typography variant="h5">All Votes:</Typography>
                                         <Box>Yes: {yesVotes}</Box>
                                         <Box>No: {noVotes}</Box>
                                     </Box>
+                                ) : (
+                                    <Box m={2}>Number voting: {numVoting}</Box>
                                 )}
                             </Box>
                         </AccordionDetails>
@@ -272,6 +289,9 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                             <Box>
                                 <Button color="secondary" variant="contained" onClick={resetGame}>
                                     Reset Game
+                                </Button>
+                                <Button color="default" variant="contained" onClick={start}>
+                                    Reset Roles
                                 </Button>
                             </Box>
                         </AccordionDetails>

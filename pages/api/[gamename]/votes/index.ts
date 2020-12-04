@@ -34,11 +34,6 @@ const ShowVotes: NextApiHandler = async (req, res) => {
         );
     }
 
-    const numVotes = game.value.players.filter((p) => p.vote !== null).length;
-    if (numVotes !== game.value.players.length) {
-        return res.status(412).end('Still waiting on votes!');
-    }
-
     let newGame: GamePostStart;
     if (req.method === 'PUT') {
         if (mode !== 'public' && mode !== 'private') {

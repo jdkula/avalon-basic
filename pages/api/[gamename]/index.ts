@@ -45,7 +45,7 @@ const GameControl: NextApiHandler = async (req, res) => {
             return res.status(412).end('Game is already started!');
         }
 
-        const startedGame = assignRoles(game, ['Loyal', 'Minion', 'Merlin', ...optionalRoles]);
+        const startedGame = assignRoles(game, ['Loyal', 'Minion', 'Merlin', 'Assassin', ...optionalRoles]);
         delete startedGame._id;
 
         res.send(
