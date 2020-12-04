@@ -1,6 +1,6 @@
 import role_config_raw from '~/lib/role_config.json';
 import players_config_raw from '~/lib/players_config.json';
-import { GamePostStart, GamePreStart, GameStatus } from './db/mongo';
+import type { GamePostStart, GamePreStart, GameStatus } from './db/mongo';
 
 export const MIN_PLAYERS = 5;
 export const MAX_PLAYERS = 10;
