@@ -1,0 +1,68 @@
+{
+    "Loyal": {
+        "name": "Loyal",
+        "knows": [],
+        "side": "good",
+        "max": null,
+        "required": true
+    },
+    "Merlin": {
+        "name": "Merlin",
+        "knows": [
+            { "role": "Morgana", "as": "Evil" },
+            { "role": "Minion", "as": "Evil" },
+            { "role": "Assassin", "as": "Evil" }
+        ],
+        "side": "good",
+        "max": 1,
+        "required": true
+    },
+    "Percival": {
+        "name": "Percival",
+        "knows": [
+            { "role": "Merlin", "as": "Wizard" },
+            { "role": "Morgana", "as": "Wizard" }
+        ],
+        "side": "good",
+        "max": 1,
+        "required": false
+    },
+    "Minion": {
+        "name": "Minion",
+        "knows": [
+            { "role": "Minion", "as": "Evil" },
+            { "role": "Morgana", "as": "Evil" },
+            { "role": "Assassin", "as": "Evil" }
+        ],
+        "side": "evil",
+        "max": null,
+        "required": true
+    },
+    "Assassin": {
+        "name": "Assassin",
+        "knows": [
+            { "role": "Minion", "as": "Evil" },
+            { "role": "Morgana", "as": "Evil" }
+        ],
+        "side": "evil",
+        "max": 1,
+        "required": true
+    },
+    "Morgana": {
+        "name": "Morgana",
+        "knows": [
+            { "role": "Minion", "as": "Evil" },
+            { "role": "Assassin", "as": "Evil" }
+        ],
+        "side": "evil",
+        "max": 1,
+        "required": false
+    },
+    "Oberon": {
+        "name": "Oberon",
+        "knows": [],
+        "side": "evil",
+        "max": 1,
+        "required": false
+    }
+}
