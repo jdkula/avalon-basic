@@ -16,6 +16,9 @@ const PlayerVote: NextApiHandler = async (req, res) => {
     if (game.status === 'prestart') {
         return res.status(412).send('Game has not started yet!');
     }
+    if (game.voting !== null) {
+        return res.status(412).send('Votes are currently being shown!');
+    }
 
     const player = game.players.find((p) => p.name === playername) ?? null;
     if (!player) {
@@ -36,7 +39,7 @@ const PlayerVote: NextApiHandler = async (req, res) => {
         await db.games.updateOne(
             { _id: gamename },
             { $set: { 'players.$[player].vote': vote } },
-            { arrayFilters: [{ player: { name: playername } }] },
+            { arrayFilters: [{ 'player.name': playername }] },
         );
         return res.send({ vote });
     }

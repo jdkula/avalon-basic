@@ -1,6 +1,6 @@
 import role_config_raw from '~/lib/role_config.json';
 import players_config_raw from '~/lib/players_config.json';
-import { GamePostStart, GamePreStart } from './db/mongo';
+import { GamePostStart, GamePreStart, GameStatus } from './db/mongo';
 
 export const MIN_PLAYERS = 5;
 export const MAX_PLAYERS = 10;
@@ -56,7 +56,7 @@ function getNextRole(roles: Role[]): Role {
     throw new Error('Ran out of roles!!');
 }
 
-export function assignRoles(pregame: GamePreStart, enabledRoles: RoleName[]): GamePostStart {
+export function assignRoles(pregame: GameStatus, enabledRoles: RoleName[]): GamePostStart {
     const game: GamePostStart = {
         _id: pregame._id,
         status: 'poststart',
@@ -64,7 +64,7 @@ export function assignRoles(pregame: GamePreStart, enabledRoles: RoleName[]): Ga
         players: [],
     };
 
-    const players = shuffle(pregame.players.map((p) => p.name));
+    const players = shuffle((pregame as GamePreStart).players.map((p) => p.name));
     const selectedRoles: Role[] = (Object.keys(roles_config) as RoleName[])
         .filter((role) => enabledRoles.includes(role))
         .map((role) => JSON.parse(JSON.stringify(roles_config[role])))
