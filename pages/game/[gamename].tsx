@@ -19,7 +19,7 @@ import { useSnackbar } from 'notistack';
 import React, { ReactNode, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import type { GamePostStart, GameStatus } from '~/lib/db/mongo';
-import roles_config, { Role } from '~/lib/roles';
+import roles_config, { PlayerConfig, players_config, Role } from '~/lib/roles';
 
 interface InitialProps {
     gamename: string;
@@ -62,18 +62,41 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
 
     let role: Role | null = null;
     let roleDetails: ReactNode | null = null;
-    let knowledgeDetails: ReactNode | null = null;
+    let knowledgeDetails: ReactNode[] | null = null;
     let joined = false;
     let yourVote: boolean | null = null;
     let votesShown = false;
     let yesVotes: ReactNode | null = null;
     let noVotes: ReactNode | null = null;
-    let numVoting = 0;
+    let thoseVoting: ReactNode | null = null;
+    let details: ReactNode | null = null;
+    const roleSet: Set<string> = new Set();
     if (game?.status === 'poststart') {
         const you = game.players.find((p) => p.name === name);
         joined = !!you;
 
-        numVoting = game.players.filter((p) => p.vote !== null).length;
+        game.players.forEach((e) => roleSet.add(e.role));
+        const playerinfo: PlayerConfig = players_config[game.players.length];
+        details = (
+            <Box>
+                <Box>
+                    <Typography variant="caption">Players: {game.players.map((p) => p.name).join(', ')}</Typography>
+                </Box>
+                <Box>
+                    <Typography variant="caption">Roles: {[...roleSet.keys()].join(', ')}</Typography>
+                </Box>
+                <Box>
+                    <Typography variant="caption">
+                        # Good People: {playerinfo.good}, # Bad People: {playerinfo.evil}
+                    </Typography>
+                </Box>
+            </Box>
+        );
+
+        thoseVoting = game.players
+            .filter((p) => p.vote !== null)
+            .map((p) => p.name)
+            .join(', ');
         votesShown = game.voting !== null;
         if (votesShown && game.voting === 'private') {
             yesVotes = <Typography>{game.players.filter((p) => p.vote === true).length}</Typography>;
@@ -232,9 +255,16 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                             <Box>
                                 <Box>{roleDetails}</Box>
                                 <Box>
-                                    <Typography>You know:</Typography>
-                                    <Box>{knowledgeDetails ? <List>{knowledgeDetails}</List> : 'Nothing! :('}</Box>
+                                    {(knowledgeDetails ?? []).length > 0 ? (
+                                        <Box>
+                                            <Typography>You know:</Typography>
+                                            <List>{knowledgeDetails}</List>
+                                        </Box>
+                                    ) : (
+                                        <Typography>You don’t know anything special.</Typography>
+                                    )}
                                 </Box>
+                                <Box mt={2}>{details}</Box>
                             </Box>
                         </AccordionDetails>
                     </Accordion>
@@ -276,7 +306,7 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
                                         <Box>No: {noVotes}</Box>
                                     </Box>
                                 ) : (
-                                    <Box m={2}>Number voting: {numVoting}</Box>
+                                    <Box m={2}>These people voted: {thoseVoting}</Box>
                                 )}
                             </Box>
                         </AccordionDetails>

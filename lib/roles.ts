@@ -4,7 +4,7 @@ import type { GamePostStart, GamePreStart, GameStatus } from './db/mongo';
 
 export const MIN_PLAYERS = 5;
 export const MAX_PLAYERS = 10;
-type PlayerConfig = { good: number; evil: number };
+export type PlayerConfig = { good: number; evil: number };
 type Players = { [num in '5' | '6' | '7' | '8' | '9' | '10']: PlayerConfig };
 export const players_config = players_config_raw as Players;
 
