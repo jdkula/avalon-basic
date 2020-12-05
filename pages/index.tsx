@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CircularProgress, Container, TextField } from '@material-ui/core';
+import { Box, Button, Card, CardContent, CircularProgress, Container, TextField, Typography } from '@material-ui/core';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { SyntheticEvent, useState } from 'react';
@@ -15,14 +15,16 @@ const Index: NextPage = () => {
     };
 
     return (
-        <Container>
-            <Box textAlign="center">
+        <Container maxWidth="xs">
+            <Box textAlign="center" pt={8}>
+                <Typography variant="h2">Avalon-Basic</Typography>
+                <Box pt={4} />
                 <Card>
                     <CardContent>
                         <form onSubmit={go}>
                             <Box m={2}>
                                 <TextField
-                                    label="Game name"
+                                    label="Game Name"
                                     value={gameName}
                                     onChange={(e) => setGameName(e.target.value)}
                                     variant="outlined"

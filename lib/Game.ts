@@ -1,8 +1,10 @@
 import Axios from 'axios';
 import { mutate } from 'swr';
-import { collections, GamePostStart, GamePreStart, GameStatus, Mission, Player, Round } from './db/mongo';
+import type { GamePostStart, Mission, Player, Round } from './db/mongo';
 import GameSettings from './GameSettings';
 import Roles, { Role, RoleName } from './Roles';
+
+type RoleKnowledge = { [role: string]: string[] };
 
 export default class Game {
     private readonly _game: GamePostStart;
@@ -22,6 +24,26 @@ export default class Game {
 
     get myRole(): Role {
         return Roles.get(this.my.role);
+    }
+
+    get knowledge(): RoleKnowledge {
+        const rn: RoleKnowledge = {};
+
+        for (const player of this.root.players) {
+            if (!this._playerName) {
+                const list = rn[player.role] ?? [];
+                list.push(player.name);
+                rn[player.role] = list;
+            } else {
+                const knowledge = this.myRole.knows.find((k) => k.role === player.role);
+                if (!knowledge) continue;
+                const list = rn[knowledge.as] ?? [];
+                list.push(player.name);
+                rn[knowledge.as] = list;
+            }
+        }
+
+        return rn;
     }
 
     get players(): string[] {
@@ -179,17 +201,4 @@ export default class Game {
             return e.response.data;
         }
     }
-}
-
-export async function getOrCreateGame(gameName: string): Promise<GameStatus> {
-    const db = await collections;
-    const { value: game } = await db.games.findOneAndUpdate(
-        { _id: gameName },
-        {
-            $setOnInsert: { players: [], status: 'prestart', history: [], votingStatus: null },
-        },
-        { upsert: true, returnOriginal: false },
-    );
-
-    return game;
 }

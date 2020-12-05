@@ -50,3 +50,16 @@ export type GameStatus = GamePreStart | GamePostStart;
 export const collections = mongo.then((db) => ({
     games: db.collection<GameStatus>('games'),
 }));
+
+export async function getOrCreateGame(gameName: string): Promise<GameStatus> {
+    const db = await collections;
+    const { value: game } = await db.games.findOneAndUpdate(
+        { _id: gameName },
+        {
+            $setOnInsert: { players: [], status: 'prestart', history: [], votingStatus: null },
+        },
+        { upsert: true, returnOriginal: false },
+    );
+
+    return game;
+}

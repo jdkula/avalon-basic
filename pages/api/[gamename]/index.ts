@@ -1,6 +1,5 @@
 import { NextApiHandler } from 'next';
-import { collections } from '~/lib/db/mongo';
-import { getOrCreateGame } from '~/lib/Game';
+import { collections, getOrCreateGame } from '~/lib/db/mongo';
 import GameSettings from '~/lib/GameSettings';
 import Roles, { RoleName } from '~/lib/Roles';
 
