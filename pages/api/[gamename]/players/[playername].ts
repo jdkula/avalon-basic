@@ -1,19 +1,15 @@
 import { NextApiHandler } from 'next';
 import { collections, Player } from '~/lib/db/mongo';
-import { MAX_PLAYERS } from '~/lib/roles';
+import { getOrCreateGame } from '~/lib/game';
+import GameSettings from '~/lib/GameSettings';
+import Roles from '~/lib/Roles';
 
 const PlayerControl: NextApiHandler = async (req, res) => {
     const db = await collections;
 
     const { gamename, playername } = req.query as Record<string, string>;
 
-    const { value: game } = await db.games.findOneAndUpdate(
-        { _id: gamename },
-        {
-            $setOnInsert: { players: [], status: 'prestart', voting: null },
-        },
-        { upsert: true, returnOriginal: false },
-    );
+    const game = await getOrCreateGame(gamename);
 
     if (req.method === 'GET') {
         const player = game.players.find((p) => p.name === playername) ?? null;
@@ -38,7 +34,7 @@ const PlayerControl: NextApiHandler = async (req, res) => {
         if (existientPlayer) {
             return res.status(200).send(existientPlayer);
         }
-        if (game.players.length >= MAX_PLAYERS) {
+        if (game.players.length >= GameSettings.kMaxPlayers) {
             return res.status(412).end('Game is at the maximum number of players!');
         }
         const player: Player = { name: playername, role: null, vote: null };

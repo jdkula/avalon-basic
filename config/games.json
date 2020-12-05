@@ -1,0 +1,74 @@
+{
+    "5": {
+        "good": 3,
+        "evil": 2,
+        "quests": [
+            { "adventurers": 2, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 2, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    },
+    "6": {
+        "good": 4,
+        "evil": 2,
+        "quests": [
+            { "adventurers": 2, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    },
+    "7": {
+        "good": 4,
+        "evil": 3,
+        "quests": [
+            { "adventurers": 2, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 2 },
+            { "adventurers": 4, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    },
+    "8": {
+        "good": 5,
+        "evil": 3,
+        "quests": [
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 5, "failsRequired": 2 },
+            { "adventurers": 5, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    },
+    "9": {
+        "good": 6,
+        "evil": 3,
+        "quests": [
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 5, "failsRequired": 2 },
+            { "adventurers": 5, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    },
+    "10": {
+        "good": 6,
+        "evil": 4,
+        "quests": [
+            { "adventurers": 3, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 4, "failsRequired": 1 },
+            { "adventurers": 5, "failsRequired": 2 },
+            { "adventurers": 5, "failsRequired": 1 }
+        ],
+        "voteTrackLength": 5
+    }
+}

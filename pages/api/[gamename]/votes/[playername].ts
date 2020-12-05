@@ -1,33 +1,32 @@
 import { NextApiHandler } from 'next';
 import { collections } from '~/lib/db/mongo';
+import Game, { getOrCreateGame } from '~/lib/game';
 
 const PlayerVote: NextApiHandler = async (req, res) => {
     const db = await collections;
     const { gamename, playername } = req.query as Record<string, string>;
 
-    const { value: game } = await db.games.findOneAndUpdate(
-        { _id: gamename },
-        {
-            $setOnInsert: { players: [], status: 'prestart', voting: null },
-        },
-        { upsert: true, returnOriginal: false },
-    );
+    const gameStub = await getOrCreateGame(gamename);
 
-    if (game.status === 'prestart') {
+    if (gameStub.status === 'prestart') {
         return res.status(412).send('Game has not started yet!');
     }
-    if (game.voting !== null) {
-        return res.status(412).send('Votes are currently being shown!');
+    const game = new Game(gameStub, playername);
+
+    if (!game.voting) {
+        return res.status(412).send('A vote has not yet been called!');
     }
 
-    const player = game.players.find((p) => p.name === playername) ?? null;
-    if (!player) {
+    if (!game.players.includes(playername)) {
         return res.status(404).end('Player not found');
     }
 
     if (req.method === 'GET') {
-        return res.send({ vote: player.vote });
+        return res.send({ vote: game.myVote });
     } else if (req.method === 'DELETE') {
+        if (!game.canVote) {
+            return res.status(412).end("You're not allowed to vote!");
+        }
         await db.games.updateOne(
             { _id: gamename },
             { $set: { 'players.$[player].vote': null } },
@@ -35,7 +34,14 @@ const PlayerVote: NextApiHandler = async (req, res) => {
         );
         return res.send({ vote: null });
     } else if (req.method === 'POST') {
+        if (!game.canVote) {
+            return res.status(412).end("You're not allowed to vote!");
+        }
         const { vote } = req.body;
+
+        if (game.myRole.side === 'good' && vote === false) {
+            return res.status(400).end('Good players are not allowed to vote down a mission (you traitor!)');
+        }
         await db.games.updateOne(
             { _id: gamename },
             { $set: { 'players.$[player].vote': vote } },

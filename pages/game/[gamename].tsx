@@ -6,6 +6,7 @@ import {
     Button,
     Card,
     CardContent,
+    CircularProgress,
     Container,
     List,
     ListItem,
@@ -16,13 +17,13 @@ import { ExpandMore } from '@material-ui/icons';
 import Axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useSnackbar } from 'notistack';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { FC, ReactNode, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import type { GamePostStart, GameStatus } from '~/lib/db/mongo';
-import roles_config, { PlayerConfig, players_config, Role } from '~/lib/roles';
+import type { GamePostStart, GamePreStart, GameStatus } from '~/lib/db/mongo';
+import roles_config, { PlayerConfig, players_config, Role } from '~/lib/Roles';
 
 interface InitialProps {
-    gamename: string;
+    gameName: string;
     initialGame: GameStatus | null;
 }
 
@@ -43,9 +44,25 @@ function getKnowledge(game: GamePostStart, role: Role): SpecificKnowledge {
     return specificKnowldge;
 }
 
-const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
+interface GameViewProps {
+    game: GamePostStart;
+    gameName: string;
+    playerName: string;
+}
+const GameView: FC<GameViewProps> = () => {};
+
+interface LobbyProps {
+    game: GamePreStart;
+    gameName: string;
+    playerName: string;
+    setPlayerName: (name: string) => void;
+}
+const Lobby: FC<LobbyProps> = ({ game, gameName, playerName, setPlayerName }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const { data: game, mutate } = useSWR<GameStatus | null>(`/api/${gamename}`, {
+};
+
+const Game: NextPage<InitialProps> = ({ gameName, initialGame }) => {
+    const { data: game, mutate } = useSWR<GameStatus | null>(`/api/${gameName}`, {
         initialData: initialGame,
         refreshInterval: 1000,
     });
@@ -53,12 +70,22 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
     const [name, setName] = useState('');
 
     useEffect(() => {
-        const name = window.localStorage.getItem(`__AVALON_${gamename}_name`);
+        const name = window.localStorage.getItem(`__AVALON_${gameName}_name`);
         if (name) setName(name);
     }, []);
     useEffect(() => {
-        window.localStorage.setItem(`__AVALON_${gamename}_name`, name);
+        window.localStorage.setItem(`__AVALON_${gameName}_name`, name);
     }, [name]);
+
+    if (!game) {
+        return <CircularProgress />;
+    }
+
+    if (game?.status === 'prestart') {
+        return <Lobby game={game} gameName={gameName} playerName={name} setPlayerName={setName} />;
+    } else {
+        return <GameView game={game} gameName={gameName} playerName={name} />;
+    }
 
     let role: Role | null = null;
     let roleDetails: ReactNode | null = null;
@@ -145,31 +172,6 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
     if (role) {
         roleDetails = <Typography variant="h5">You are: {role.name}!</Typography>;
     }
-
-    const leave = async () => {
-        try {
-            await Axios.delete(`/api/${gamename}/${name}`);
-            mutate();
-        } catch (e) {
-            enqueueSnackbar(`Error: ${e.response.data}`, { variant: 'error' });
-        }
-    };
-    const join = async () => {
-        try {
-            await Axios.post(`/api/${gamename}/${name}`);
-            mutate();
-        } catch (e) {
-            enqueueSnackbar(`Error: ${e.response.data}`, { variant: 'error' });
-        }
-    };
-    const start = async () => {
-        try {
-            await Axios.post(`/api/${gamename}`, { force: true });
-            mutate();
-        } catch (e) {
-            enqueueSnackbar(`Error: ${e.response.data}`, { variant: 'error' });
-        }
-    };
 
     const vote = async (vote: boolean | null) => {
         try {
@@ -361,9 +363,9 @@ const GameDisplay: NextPage<InitialProps> = ({ gamename, initialGame }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
-            gamename: context.query.gamename as string,
+            gameName: context.query.gamename as string,
         },
     };
 };
 
-export default GameDisplay;
+export default Game;
