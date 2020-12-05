@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 import { collections } from '~/lib/db/mongo';
-import Game, { getOrCreateGame } from '~/lib/game';
+import Game, { getOrCreateGame } from '~/lib/Game';
 
 const Team: NextApiHandler = async (req, res) => {
     if (req.method !== 'GET' && req.method !== 'POST') {

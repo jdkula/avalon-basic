@@ -20,7 +20,6 @@ import { useSnackbar } from 'notistack';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import type { GamePostStart, GamePreStart, GameStatus } from '~/lib/db/mongo';
-import roles_config, { PlayerConfig, players_config, Role } from '~/lib/Roles';
 
 interface InitialProps {
     gameName: string;

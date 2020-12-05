@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 import { collections } from '~/lib/db/mongo';
-import Game, { getOrCreateGame } from '~/lib/game';
+import Game, { getOrCreateGame } from '~/lib/Game';
 
 const PlayerVote: NextApiHandler = async (req, res) => {
     const db = await collections;
