@@ -1,15 +1,17 @@
 import { Card, CardContent, Typography, Box, Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import useGame from '~/lib/useGame';
+import TeamBoxes from './TeamBoxes';
 import TeamBuilding from './TeamBuilding';
+import Voting from './Voting';
 
 const Gameplay: FC = () => {
     const game = useGame();
 
-    let theGamePart;
+    let theGamePart: ReactNode;
 
-    if (game.voting) {
-    } else if (game.votesShown) {
+    if (game.voting || game.votesShown) {
+        theGamePart = <Voting />;
     } else {
         // Team is being selected by the current leader
         theGamePart = <TeamBuilding />;
@@ -18,7 +20,12 @@ const Gameplay: FC = () => {
     return (
         <Card>
             <CardContent>
-                <Typography>Current lead is: {game.leader}</Typography>
+                <Box textAlign="center">
+                    <Typography>Current Lead:</Typography>
+                    <Typography variant="h6">{game.leader}</Typography>
+                    <Typography>Current Team:</Typography>
+                    <TeamBoxes />
+                </Box>
                 <Box>{theGamePart}</Box>
             </CardContent>
         </Card>

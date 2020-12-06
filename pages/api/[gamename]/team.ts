@@ -21,7 +21,11 @@ const Team: NextApiHandler = async (req, res) => {
         if (game.root.votingStatus !== null) {
             return res.status(412).end("You can't change the team during or after voting!");
         }
-        game.currentMission.team = [...new Set<string>(req.body.team)];
+        const newTeam = [...new Set<string>(req.body.team.filter((v) => typeof v === 'string'))];
+        if (newTeam.length > game.requiredTeamSize) {
+            return res.status(400).end('That team is too large!');
+        }
+        game.currentMission.team = newTeam;
         await db.games.updateOne({ _id: gamename }, { $set: game.root });
     }
 

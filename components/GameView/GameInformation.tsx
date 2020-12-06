@@ -10,7 +10,7 @@ const GameInformation: FC = () => {
     const game = useGame();
 
     return (
-        <Accordion defaultExpanded>
+        <Accordion>
             <AccordionSummary id="accordion1-game" aria-controls="accordion1-game" expandIcon={<ExpandMore />}>
                 <Typography variant="h5">Game Information</Typography>
             </AccordionSummary>

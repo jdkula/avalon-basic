@@ -39,7 +39,7 @@ const PlayerVote: NextApiHandler = async (req, res) => {
         }
         const { vote } = req.body;
 
-        if (game.myRole.side === 'good' && vote === false) {
+        if (game.voting === 'mission' && game.myRole.side === 'good' && vote === false) {
             return res.status(400).end('Good players are not allowed to vote down a mission (you traitor!)');
         }
         await db.games.updateOne(

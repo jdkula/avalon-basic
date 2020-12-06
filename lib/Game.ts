@@ -63,19 +63,19 @@ export default class Game {
     }
 
     get yesVotes(): string[] {
-        return this._game.players.filter((p) => p.vote === true && this.allowedVoters.has(p.name)).map((p) => p.name);
+        return this._game.players.filter((p) => p.vote === true).map((p) => p.name);
     }
 
     get noVotes(): string[] {
-        return this._game.players.filter((p) => p.vote === false && this.allowedVoters.has(p.name)).map((p) => p.name);
+        return this._game.players.filter((p) => p.vote === false).map((p) => p.name);
     }
 
     get voters(): string[] {
-        return this._game.players.filter((p) => p.vote !== null && this.allowedVoters.has(p.name)).map((p) => p.name);
+        return this._game.players.filter((p) => p.vote !== null).map((p) => p.name);
     }
 
     get nonVoters(): string[] {
-        return this._game.players.filter((p) => p.vote === null && this.allowedVoters.has(p.name)).map((p) => p.name);
+        return this._game.players.filter((p) => p.vote === null).map((p) => p.name);
     }
 
     get leader(): string {
@@ -114,19 +114,19 @@ export default class Game {
         return false;
     }
 
-    get allowedVoters(): Set<string> {
+    get allowedVoters(): string[] {
         if (this._game.votingStatus === 'team') {
-            return new Set(this.players);
+            return this.players;
         }
         if (this._game.votingStatus === 'mission') {
-            return new Set(this.team ?? []);
+            return this.team;
         }
-        return new Set();
+        return [];
     }
 
     get canVote(): boolean {
         if (!this._playerName) throw new Error('No player name specified');
-        return this.allowedVoters.has(this._playerName);
+        return this.allowedVoters.includes(this._playerName);
     }
 
     get myVote(): boolean | null | undefined {
@@ -147,10 +147,10 @@ export default class Game {
     get allVotesIn(): boolean {
         let votes = 0;
         for (const voter of this.voters) {
-            if (this.allowedVoters.has(voter)) votes++;
+            if (this.allowedVoters.includes(voter)) votes++;
         }
 
-        return this.allowedVoters.size > 0 && votes === this.allowedVoters.size;
+        return this.allowedVoters.length > 0 && votes === this.allowedVoters.length;
     }
 
     get requiredTeamSize(): number {
@@ -212,6 +212,8 @@ export default class Game {
 
     async setTeam(team: string[]): Promise<null | string> {
         try {
+            this.currentMission.team = team;
+            mutate(`/api/${this._game._id}`, this.root, false);
             await Axios.put(`/api/${this._game._id}/team`, { team });
             mutate(`/api/${this._game._id}`);
             return null;
