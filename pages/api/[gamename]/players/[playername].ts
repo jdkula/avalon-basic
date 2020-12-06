@@ -26,17 +26,29 @@ const PlayerControl: NextApiHandler = async (req, res) => {
         await db.games.updateOne({ _id: gamename }, { $pull: { players: { name: playername } } });
         return res.status(200).end('Player removed.');
     } else if (req.method === 'POST') {
-        if (game.status === 'poststart') {
-            return res.status(412).end('Cannot remove player from game in progress');
-        }
         const existientPlayer = game.players.find((p) => p.name === playername);
+        const notes = (req.body.notes as string) || '';
+
         if (existientPlayer) {
-            return res.status(200).send(existientPlayer);
+            if (notes !== existientPlayer.notes) {
+                await db.games.updateOne(
+                    { _id: gamename, 'players.name': playername },
+                    {
+                        $set: {
+                            'players.$[].notes': notes,
+                        },
+                    },
+                );
+            }
+            return res.status(200).send({ ...existientPlayer, notes });
         }
         if (game.players.length >= GameSettings.kMaxPlayers) {
             return res.status(412).end('Game is at the maximum number of players!');
         }
-        const player: Player = { name: playername, role: null, vote: null };
+        if (game.status === 'poststart') {
+            return res.status(412).end('Cannot add a player to a game in progress');
+        }
+        const player: Player = { name: playername, role: null, vote: null, notes };
         await db.games.updateOne({ _id: gamename }, { $push: { players: player } });
         return res.status(201).send(player);
     }

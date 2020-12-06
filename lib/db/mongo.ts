@@ -11,12 +11,14 @@ export interface Player {
     name: string;
     role: RoleName;
     vote: boolean | null;
+    notes: string;
 }
 
 interface PlayerPreStart {
     name: string;
     role: null;
     vote: null;
+    notes: string;
 }
 export interface GamePreStart {
     status: 'prestart';

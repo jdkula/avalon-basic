@@ -26,6 +26,14 @@ export default class Game {
         return Roles.get(this.my.role);
     }
 
+    get myNotes(): string {
+        return this.my.notes;
+    }
+
+    get myName(): string {
+        return this._playerName;
+    }
+
     get knowledge(): RoleKnowledge {
         const rn: RoleKnowledge = {};
 
@@ -195,6 +203,28 @@ export default class Game {
     async resetGame(): Promise<null | string> {
         try {
             await Axios.delete(`/api/${this._game._id}`);
+            mutate(`/api/${this._game._id}`);
+            return null;
+        } catch (e) {
+            return e.response.data;
+        }
+    }
+
+    async setTeam(team: string[]): Promise<null | string> {
+        try {
+            await Axios.put(`/api/${this._game._id}/team`, { team });
+            mutate(`/api/${this._game._id}`);
+            return null;
+        } catch (e) {
+            return e.response.data;
+        }
+    }
+
+    async setNotes(notes: string): Promise<null | string> {
+        if (!this._playerName) throw new Error('No player name specified');
+
+        try {
+            await Axios.post(`/api/${this._game._id}/players/${this._playerName}`, { notes });
             mutate(`/api/${this._game._id}`);
             return null;
         } catch (e) {

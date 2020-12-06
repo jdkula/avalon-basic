@@ -84,6 +84,7 @@ export default class Roles {
                 name,
                 role: role.name,
                 vote: null,
+                notes: '',
             });
         }
 
@@ -94,6 +95,7 @@ export default class Roles {
                 name,
                 role: role.name,
                 vote: null,
+                notes: '',
             });
         }
 

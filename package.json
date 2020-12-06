@@ -10,8 +10,10 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
+    "@types/lodash": "^4.14.165",
     "@types/styled-components": "^5.1.4",
     "axios": "^0.21.0",
+    "lodash": "^4.17.20",
     "mongodb": "^3.6.3",
     "next": "10.0.3",
     "notistack": "^1.0.2",
