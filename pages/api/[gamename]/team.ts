@@ -1,4 +1,4 @@
-import { NextApiHandler } from 'next';
+import {} from 'next';
 import apiRoute from '~/lib/apiRoute';
 import { getOrCreateGame } from '~/lib/db/util';
 import Game from '~/lib/Game';

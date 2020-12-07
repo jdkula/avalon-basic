@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 import nextConnect, { NextConnect } from 'next-connect';
 import middleware, { AvalonRequest } from './db/middleware';
 

@@ -1,7 +1,5 @@
-import { NextApiHandler } from 'next';
 import apiRoute from '~/lib/apiRoute';
 import { getOrCreateGame } from '~/lib/db/util';
-import Game from '~/lib/Game';
 import GameSettings from '~/lib/GameSettings';
 import Roles, { RoleName } from '~/lib/Roles';
 

@@ -1,4 +1,4 @@
-import { Accordion, AccordionSummary, Typography, AccordionDetails, Box, List, ListItem } from '@material-ui/core';
+import { Accordion, AccordionSummary, Typography, AccordionDetails, Box } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import React, { FC } from 'react';
 import useGame from '~/lib/useGame';

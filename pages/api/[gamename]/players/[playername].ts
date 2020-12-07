@@ -1,13 +1,11 @@
-import { NextApiHandler } from 'next';
 import apiRoute from '~/lib/apiRoute';
 import { Player } from '~/lib/db/models';
 import { getOrCreateGame } from '~/lib/db/util';
 import GameSettings from '~/lib/GameSettings';
-import Roles from '~/lib/Roles';
 
 export default apiRoute(['gamename', 'playername'])
     .get(async (req, res) => {
-        const { gamename, playername } = req.params;
+        const { gamename } = req.params;
 
         const game = await getOrCreateGame(gamename);
 

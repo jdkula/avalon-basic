@@ -1,5 +1,4 @@
 import { Box, Typography, Container } from '@material-ui/core';
-import _ from 'lodash';
 import React, { FC } from 'react';
 import useGame from '~/lib/useGame';
 import GameInformation from './GameInformation';

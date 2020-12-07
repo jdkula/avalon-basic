@@ -115,7 +115,7 @@ export default class Game {
     }
 
     get allowedVoters(): string[] {
-        if (this._game.votingStatus === 'team') {
+        if (this._game.votingStatus === 'team' || this._game.votingStatus === 'public') {
             return this.players;
         }
         if (this._game.votingStatus === 'mission') {
@@ -157,6 +157,14 @@ export default class Game {
 
     get requiredTeamSize(): number {
         return GameSettings.get(this.players.length).quests[this.currentRoundNumber - 1].adventurers;
+    }
+
+    get isFinalMission(): boolean {
+        return this.currentRound.missions.length === GameSettings.get(this.players.length).voteTrackLength;
+    }
+
+    get failsRequired(): number {
+        return GameSettings.get(this.players.length).quests[this.currentRoundNumber - 1].failsRequired;
     }
 
     get readyToContinue(): boolean {

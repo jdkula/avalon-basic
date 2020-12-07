@@ -1,4 +1,3 @@
-import { NextApiHandler } from 'next';
 import apiRoute from '~/lib/apiRoute';
 
 export default apiRoute(['gamename']).post(async (req, res) => {

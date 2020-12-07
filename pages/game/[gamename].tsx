@@ -35,7 +35,7 @@ const TheGame: NextPage<InitialProps> = ({ gameName, initialGame }) => {
         return <CircularProgress />;
     }
 
-    if (game?.status === 'prestart' || !name) {
+    if (game?.status === 'prestart' || !name || !game.players.map((p) => p.name).includes(name)) {
         return <LobbyView game={game as GamePreStart} gameName={gameName} playerName={name} setPlayerName={setName} />;
     } else {
         return (

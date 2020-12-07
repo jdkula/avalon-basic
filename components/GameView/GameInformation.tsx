@@ -32,20 +32,24 @@ const GameInformation: FC = () => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Box display="flex" justifyContent="space-around" width="100%">
-                                <Button variant="outlined" color="secondary" onClick={withError(() => game.endGame())}>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={withError<never>(() => game.endGame())}
+                                >
                                     End Game
                                 </Button>
                                 <Button
                                     variant="outlined"
                                     color="secondary"
-                                    onClick={withError(() => game.rerollGame())}
+                                    onClick={withError<never>(() => game.rerollGame())}
                                 >
                                     Reroll Game
                                 </Button>
                                 <Button
                                     variant="outlined"
                                     color="secondary"
-                                    onClick={withError(() => game.resetGame())}
+                                    onClick={withError<never>(() => game.resetGame())}
                                 >
                                     Reset Game
                                 </Button>

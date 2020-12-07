@@ -1,5 +1,4 @@
 import { Typography, Button, Box, Card, CardContent, TextField, Container } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
 import React, { FC, useState, ReactNode } from 'react';
 import { GamePreStart } from '~/lib/db/models';
 import GameSettings from '~/lib/GameSettings';
@@ -42,7 +41,7 @@ const LobbyView: FC<LobbyViewProps> = ({ game, gameName, playerName, setPlayerNa
                 variant="contained"
                 color="secondary"
                 size="large"
-                onClick={withError(() => lobby.delete(playerName))}
+                onClick={withError<never>(() => lobby.delete(playerName))}
             >
                 Leave
             </Button>
@@ -107,7 +106,7 @@ const LobbyView: FC<LobbyViewProps> = ({ game, gameName, playerName, setPlayerNa
                             variant="contained"
                             color="primary"
                             disabled={!canStart}
-                            onClick={withError(() => lobby.start())}
+                            onClick={withError<never>(() => lobby.start())}
                         >
                             Start Game
                         </Button>

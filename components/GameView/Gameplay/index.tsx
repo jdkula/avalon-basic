@@ -1,23 +1,15 @@
-import {
-    Card,
-    CardContent,
-    Typography,
-    Box,
-    Checkbox,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    Divider,
-} from '@material-ui/core';
+import { Card, CardContent, Typography, Box, Grid, Divider } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
-import GameSettings from '~/lib/GameSettings';
 import useGame from '~/lib/useGame';
-import TeamBoxes from './TeamBoxes';
+import useWithError from '~/lib/useWithError';
+import TeamBoxes from '../../TeamBoxes';
 import TeamBuilding from './TeamBuilding';
 import Voting from './Voting';
 
 const Gameplay: FC = () => {
     const game = useGame();
+    const withError = useWithError();
+    const updateTeam = withError((e: string[]) => game.setTeam(e));
 
     let theGamePart: ReactNode;
 
@@ -28,7 +20,12 @@ const Gameplay: FC = () => {
         theGamePart = <TeamBuilding />;
     }
 
-    const isFinalMission = game.currentRound.missions.length === GameSettings.get(game.players.length).voteTrackLength;
+    let teamBoxes: ReactNode;
+    if (game.voting || game.votesShown || game.myName !== game.leader) {
+        teamBoxes = <TeamBoxes team={game.team} />;
+    } else {
+        teamBoxes = <TeamBoxes team={game.team} max={game.requiredTeamSize} updateTeam={updateTeam} />;
+    }
 
     return (
         <Card>
@@ -37,11 +34,11 @@ const Gameplay: FC = () => {
                     <Typography variant="srOnly">
                         <h6>{`Game Status: Round ${game.currentRoundNumber}, Mission ${
                             game.currentRound.missions.length
-                        }.${isFinalMission ? ' Mission must pass or evil wins.' : ''} Mission leader is ${
+                        }.${game.isFinalMission ? ' Mission must pass or evil wins.' : ''} Mission leader is ${
                             game.leader
                         }`}</h6>
                     </Typography>
-                    <Box aria-hidden="true" color={isFinalMission ? '#F00' : 'inherit'}>
+                    <Box aria-hidden="true" color={game.isFinalMission ? '#F00' : 'inherit'}>
                         <Grid container aria-hidden="true">
                             <Grid item xs={4}>
                                 <Grid container>
@@ -81,7 +78,7 @@ const Gameplay: FC = () => {
                     <Typography variant="h6" aria-label={`Current team is ${game.team.join(', ') || '(empty)'}`}>
                         Current Team:
                     </Typography>
-                    <TeamBoxes />
+                    {teamBoxes}
                 </Box>
                 <Box>{theGamePart}</Box>
             </CardContent>

@@ -12,8 +12,8 @@ import { ExpandMore } from '@material-ui/icons';
 import React, { FC, Fragment } from 'react';
 import useGame from '~/lib/useGame';
 import SuccessChips from '../SuccessChips';
-import TeamBoxes from './Gameplay/TeamBoxes';
-import Votes from './Gameplay/Votes';
+import TeamBoxes from '../TeamBoxes';
+import Votes from '../Votes';
 
 const History: FC = () => {
     const game = useGame();
@@ -34,7 +34,7 @@ const History: FC = () => {
                         <Box textAlign="center">
                             <Typography>Mission {i + 1}</Typography>
                             <TeamBoxes team={mission.team} />
-                            <Votes showAll={true} votes={players} />
+                            <Votes show={true} sort={true} votes={players} />
                         </Box>
                     </ListItem>
                     <Divider variant="middle" />

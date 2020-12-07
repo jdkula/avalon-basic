@@ -1,14 +1,14 @@
 import { Box, Button, Card, CardContent, CircularProgress, Container, TextField, Typography } from '@material-ui/core';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 
 const Index: NextPage = () => {
     const [working, setWorking] = useState(false);
     const [gameName, setGameName] = useState('');
     const router = useRouter();
 
-    const go = (e: SyntheticEvent<any>) => {
+    const go = (e: { preventDefault: CallableFunction }) => {
         e.preventDefault();
         setWorking(true);
         router.push(`/game/${gameName}`);

@@ -1,4 +1,4 @@
-import { Collection, Db, MongoClient } from 'mongodb';
+import { Collection } from 'mongodb';
 import { NextApiRequest } from 'next';
 import { AvalonRequest } from './middleware';
 import { GameStatus } from './models';
