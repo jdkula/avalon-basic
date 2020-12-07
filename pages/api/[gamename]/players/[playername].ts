@@ -43,7 +43,7 @@ export default apiRoute(['gamename', 'playername'])
                     { _id: gamename, 'players.name': playername },
                     {
                         $set: {
-                            'players.$[].notes': notes,
+                            'players.$.notes': notes,
                         },
                     },
                 );

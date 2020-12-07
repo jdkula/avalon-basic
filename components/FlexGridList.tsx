@@ -1,4 +1,4 @@
-import { Grid, Typography, Paper } from '@material-ui/core';
+import { Grid, Typography, Paper, GridProps } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -19,8 +19,8 @@ export const FlexGridListItem: FC<{ item: ReactNode; even: boolean }> = ({ item,
     </Grid>
 );
 
-const FlexGridList: FC<{ elements: ReactNode[] }> = ({ elements }) => (
-    <Grid container spacing={2} justify="space-around">
+const FlexGridList: FC<GridProps & { elements: ReactNode[] }> = ({ elements, ...params }) => (
+    <Grid container spacing={2} justify="space-around" {...params}>
         {elements.map((el, i) => (
             <FlexGridListItem item={el} even={i % 2 === 0} key={i} />
         ))}

@@ -9,13 +9,9 @@ const RoleInformation: FC = () => {
     const knowledge = Object.keys(game.knowledge).map((role) => (
         <Box key={role} textAlign="left">
             <Typography>
-                The following players are <strong>{role}:</strong>
+                The following players are <strong>{role}: </strong>
+                {game.knowledge[role].join(', ')}
             </Typography>
-            <List>
-                {game.knowledge[role].map((player) => (
-                    <ListItem key={player}>{player}</ListItem>
-                ))}
-            </List>
         </Box>
     ));
 
@@ -25,8 +21,9 @@ const RoleInformation: FC = () => {
                 <Typography variant="h5">Your Role</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Box textAlign="center" width="100%">
+                <Box textAlign="center" width="100%" role="region" aria-label="Role Details">
                     <Typography>Your Role is: {game.myRole.name}</Typography>
+                    <Box mt={2} />
                     {knowledge.length ? knowledge : 'You don’t know anything!'}
                 </Box>
             </AccordionDetails>

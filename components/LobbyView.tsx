@@ -1,7 +1,7 @@
 import { Typography, Button, Box, Card, CardContent, TextField, Container } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { FC, useState, ReactNode } from 'react';
-import { GamePreStart } from '~/lib/db/mongo';
+import { GamePreStart } from '~/lib/db/models';
 import GameSettings from '~/lib/GameSettings';
 import Lobby from '~/lib/Lobby';
 import useWithError from '~/lib/useWithError';

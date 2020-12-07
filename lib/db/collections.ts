@@ -4,6 +4,10 @@ import { AvalonRequest } from './middleware';
 import { GameStatus } from './models';
 import { mongoClient } from './mongo';
 
+const connection: Promise<void> = (async () => {
+    if (!mongoClient.isConnected()) await mongoClient.connect();
+})();
+
 export interface Collections {
     games: Collection<GameStatus>;
 }
@@ -15,7 +19,7 @@ export default async function database(
     res?: NextApiRequest,
     next?: () => never,
 ): Promise<Collections | never> {
-    if (!mongoClient.isConnected()) await mongoClient.connect();
+    await connection;
 
     const dbRaw = mongoClient.db('avalonbasic');
     const collections = {

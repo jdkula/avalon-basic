@@ -1,8 +1,7 @@
-import { Box, FormGroup, FormControlLabel, Checkbox, Button, Grid } from '@material-ui/core';
+import { Box, FormGroup, FormControlLabel, Checkbox, Button, Grid, Typography } from '@material-ui/core';
 import React, { ChangeEvent, FC } from 'react';
 import useGame from '~/lib/useGame';
 import useWithError from '~/lib/useWithError';
-import TeamBoxes from './TeamBoxes';
 
 const TeamBuilding: FC = () => {
     const game = useGame();
@@ -11,6 +10,8 @@ const TeamBuilding: FC = () => {
     return (
         <Box>
             <Box textAlign="center" mt={2}>
+                <Typography>Need to put {game.requiredTeamSize} people on this team.</Typography>
+                <Box mt={2} />
                 <Button
                     size="large"
                     variant="contained"

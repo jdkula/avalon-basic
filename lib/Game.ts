@@ -137,6 +137,8 @@ export default class Game {
     async vote(vote: boolean | null): Promise<null | string> {
         if (!this._playerName) throw new Error('No player name specified');
         try {
+            this.my.vote = vote;
+            mutate(`/api/${this._game._id}`, this.root, false);
             await Axios.post(`/api/${this._game._id}/votes/${this._playerName}`, { vote });
             mutate(`/api/${this._game._id}`);
         } catch (e) {

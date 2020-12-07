@@ -41,6 +41,7 @@
     "Assassin": {
         "name": "Assassin",
         "knows": [
+            { "role": "Assassin", "as": "Evil" },
             { "role": "Minion", "as": "Evil" },
             { "role": "Morgana", "as": "Evil" }
         ],
@@ -52,7 +53,8 @@
         "name": "Morgana",
         "knows": [
             { "role": "Minion", "as": "Evil" },
-            { "role": "Assassin", "as": "Evil" }
+            { "role": "Assassin", "as": "Evil" },
+            { "role": "Morgana", "as": "Evil" }
         ],
         "side": "evil",
         "max": 1,

@@ -1,5 +1,5 @@
 import role_config from '~/config/roles.json';
-import type { GamePostStart, GamePreStart, GameStatus } from './db/mongo';
+import type { GamePostStart, GamePreStart, GameStatus } from './db/models';
 import GameSettings from './GameSettings';
 
 export type RoleName = keyof typeof role_config;

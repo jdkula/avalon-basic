@@ -2,9 +2,11 @@ import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import React, { ChangeEvent, FC } from 'react';
 import useGame from '~/lib/useGame';
 
-const TeamBoxes: FC = () => {
+const TeamBoxes: FC<{ team?: string[] }> = ({ team }) => {
     const game = useGame();
-    const atMaxTeam = game.team.length >= game.requiredTeamSize;
+    const atMaxTeam = !!team || game.team.length >= game.requiredTeamSize;
+
+    const useTeam = team || game.team;
 
     const onSelectPlayer = async (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
         let team = game.team;
@@ -18,17 +20,18 @@ const TeamBoxes: FC = () => {
     };
 
     return (
-        <Grid container>
+        <Grid container aria-role="group" aria-label="Team-building Checkboxes">
             {game.players.map((player) => (
                 <Grid xs item key={player}>
                     <FormControlLabel
                         disabled={
+                            !!team ||
                             game.root.votingStatus !== null ||
                             game.leader !== game.myName ||
-                            (!game.team.includes(player) && atMaxTeam)
+                            (!useTeam.includes(player) && atMaxTeam)
                         }
                         control={
-                            <Checkbox checked={game.team.includes(player)} name={player} onChange={onSelectPlayer} />
+                            <Checkbox checked={useTeam.includes(player)} name={player} onChange={onSelectPlayer} />
                         }
                         label={player}
                     />

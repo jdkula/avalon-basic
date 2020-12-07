@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { mutate } from 'swr';
-import { GamePreStart } from './db/mongo';
+import { GamePreStart } from './db/models';
 
 export default class Lobby {
     constructor(private readonly _game: GamePreStart) {}
