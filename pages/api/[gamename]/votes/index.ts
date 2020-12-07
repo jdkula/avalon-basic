@@ -1,16 +1,10 @@
 import { NextApiHandler } from 'next';
-import { collections, GamePostStart, getOrCreateGame } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
+import { getOrCreateGame } from '~/lib/db/util';
 
-const ListVotes: NextApiHandler = async (req, res) => {
-    if (req.method !== 'GET') {
-        return res.status(400).end('GET only.');
-    }
-
-    const db = await collections;
-    const gamename = req.query.gamename as string;
-
+export default apiRoute(['gamename']).get(async (req, res) => {
+    const { gamename } = req.params;
     const game = await getOrCreateGame(gamename);
-
     if (game.status === 'prestart') {
         return res.status(412).end('Game was not started!');
     }
@@ -18,6 +12,4 @@ const ListVotes: NextApiHandler = async (req, res) => {
     const votes = Object.fromEntries(game.players.map((p) => [p.name, p.vote]));
 
     res.send(votes);
-};
-
-export default ListVotes;
+});

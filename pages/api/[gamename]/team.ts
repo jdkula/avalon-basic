@@ -1,23 +1,24 @@
 import { NextApiHandler } from 'next';
-import { collections, getOrCreateGame } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
+import { getOrCreateGame } from '~/lib/db/util';
 import Game from '~/lib/Game';
 
-const Team: NextApiHandler = async (req, res) => {
-    if (req.method !== 'GET' && req.method !== 'PUT') {
-        return res.status(400).end('GET or PUT only');
-    }
-    const db = await collections;
+export default apiRoute(['gamename'])
+    .all(async (req, res, next) => {
+        const gameStub = await getOrCreateGame(req.params.gamename);
+        if (gameStub.status === 'prestart') {
+            return res.status(412).end('Game has not yet started!');
+        }
 
-    const gamename = req.query.gamename as string;
-
-    const gameStub = await getOrCreateGame(gamename);
-    if (gameStub.status === 'prestart') {
-        return res.status(412).end('Game has not yet started!');
-    }
-
-    const game = new Game(gameStub);
-
-    if (req.method === 'PUT') {
+        const game = new Game(gameStub);
+        req.body._game = game; // Another hack™
+        next();
+    })
+    .get((req, res) => {
+        res.send(req.body._game.team);
+    })
+    .put(async (req, res) => {
+        const game: Game = req.body._game;
         if (game.root.votingStatus !== null) {
             return res.status(412).end("You can't change the team during or after voting!");
         }
@@ -26,10 +27,6 @@ const Team: NextApiHandler = async (req, res) => {
             return res.status(400).end('That team is too large!');
         }
         game.currentMission.team = newTeam;
-        await db.games.updateOne({ _id: gamename }, { $set: game.root });
-    }
-
-    return res.send(game.team);
-};
-
-export default Team;
+        await req.db.games.updateOne({ _id: req.params.gamename }, { $set: game.root });
+        res.send(game.team);
+    });

@@ -1,16 +1,9 @@
 import { NextApiHandler } from 'next';
-import { collections } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
 
-const EndGame: NextApiHandler = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(400).end('POST only.');
-    }
-
-    const db = await collections;
-    const gamename = req.query.gamename as string;
-
-    const { value: game } = await db.games.findOneAndUpdate(
-        { _id: gamename },
+export default apiRoute(['gamename']).post(async (req, res) => {
+    const { value: game } = await req.db.games.findOneAndUpdate(
+        { _id: req.params.gamename },
         {
             $setOnInsert: { players: [] },
             $set: { status: 'prestart', history: [], votingStatus: null },
@@ -19,6 +12,4 @@ const EndGame: NextApiHandler = async (req, res) => {
     );
 
     return res.send(game);
-};
-
-export default EndGame;
+});

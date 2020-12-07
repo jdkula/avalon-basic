@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import GameView from '~/components/GameView';
 import LobbyView from '~/components/LobbyView';
-import type { GamePreStart, GameStatus } from '~/lib/db/mongo';
+import { GameStatus, GamePreStart } from '~/lib/db/models';
 import Game from '~/lib/Game';
 import { GameContext } from '~/lib/useGame';
 

@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { mutate } from 'swr';
-import type { GamePostStart, Mission, Player, Round } from './db/mongo';
+import { GamePostStart, Mission, Player, Round } from './db/models';
 import GameSettings from './GameSettings';
 import Roles, { Role, RoleName } from './Roles';
 

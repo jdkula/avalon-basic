@@ -1,37 +1,45 @@
 import { NextApiHandler } from 'next';
-import { collections, getOrCreateGame, Player } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
+import { Player } from '~/lib/db/models';
+import { getOrCreateGame } from '~/lib/db/util';
 import GameSettings from '~/lib/GameSettings';
 import Roles from '~/lib/Roles';
 
-const PlayerControl: NextApiHandler = async (req, res) => {
-    const db = await collections;
+export default apiRoute(['gamename', 'playername'])
+    .get(async (req, res) => {
+        const { gamename, playername } = req.params;
 
-    const { gamename, playername } = req.query as Record<string, string>;
+        const game = await getOrCreateGame(gamename);
 
-    const game = await getOrCreateGame(gamename);
-
-    if (req.method === 'GET') {
-        const player = game.players.find((p) => p.name === playername) ?? null;
+        const player = game.players.find((p) => p.name === gamename) ?? null;
         if (!player) {
             return res.status(404).end('Player not found.');
         }
         return res.send(player);
-    } else if (req.method === 'DELETE') {
+    })
+    .delete(async (req, res) => {
+        const { gamename, playername } = req.params;
+        const game = await getOrCreateGame(gamename);
+
         if (game.status === 'poststart') {
             return res.status(412).end('Cannot remove player from game in progress');
         }
         if (!game.players.find((p) => p.name === playername)) {
             return res.status(404).end('Player not found.');
         }
-        await db.games.updateOne({ _id: gamename }, { $pull: { players: { name: playername } } });
+        await req.db.games.updateOne({ _id: gamename }, { $pull: { players: { name: playername } } });
         return res.status(200).end('Player removed.');
-    } else if (req.method === 'POST') {
+    })
+    .post(async (req, res) => {
+        const { gamename, playername } = req.params;
+        const game = await getOrCreateGame(gamename);
+
         const existientPlayer = game.players.find((p) => p.name === playername);
         const notes = (req.body.notes as string) || '';
 
         if (existientPlayer) {
             if (notes !== existientPlayer.notes) {
-                await db.games.updateOne(
+                await req.db.games.updateOne(
                     { _id: gamename, 'players.name': playername },
                     {
                         $set: {
@@ -49,9 +57,6 @@ const PlayerControl: NextApiHandler = async (req, res) => {
             return res.status(412).end('Cannot add a player to a game in progress');
         }
         const player: Player = { name: playername, role: null, vote: null, notes };
-        await db.games.updateOne({ _id: gamename }, { $push: { players: player } });
+        await req.db.games.updateOne({ _id: gamename }, { $push: { players: player } });
         return res.status(201).send(player);
-    }
-};
-
-export default PlayerControl;
+    });

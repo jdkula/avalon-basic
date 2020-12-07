@@ -1,23 +1,16 @@
 import { NextApiHandler } from 'next';
-import { collections, getOrCreateGame } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
+import { getOrCreateGame } from '~/lib/db/util';
 import Game from '~/lib/Game';
 
-const Continue: NextApiHandler = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(400).end('POST only.');
-    }
-
-    const db = await collections;
-    const gamename = req.query.gamename as string;
-
+export default apiRoute(['gamename']).post(async (req, res) => {
+    const { gamename } = req.params;
     const gameStub = await getOrCreateGame(gamename);
-
     if (gameStub.status === 'prestart') {
         return res.status(412).end('Game was not started!');
     }
 
     const game = new Game(gameStub);
-
     if (game.voting) {
         // Team has been proposed or accepted
         if (!game.allVotesIn) {
@@ -68,8 +61,6 @@ const Continue: NextApiHandler = async (req, res) => {
         game.root.votingStatus = 'team';
     }
 
-    await db.games.updateOne({ _id: gamename }, { $set: game.root });
+    await req.db.games.updateOne({ _id: gamename }, { $set: game.root });
     return res.status(200).send(game.root);
-};
-
-export default Continue;
+});

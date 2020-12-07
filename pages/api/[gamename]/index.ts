@@ -1,32 +1,28 @@
 import { NextApiHandler } from 'next';
-import { collections, getOrCreateGame, Player } from '~/lib/db/mongo';
+import apiRoute from '~/lib/apiRoute';
+import { getOrCreateGame } from '~/lib/db/util';
+import Game from '~/lib/Game';
 import GameSettings from '~/lib/GameSettings';
 import Roles, { RoleName } from '~/lib/Roles';
 
-const GameControl: NextApiHandler = async (req, res) => {
-    if (req.method !== 'GET' && req.method !== 'DELETE' && req.method !== 'POST') {
-        return res.status(400).end('GET, DELETE, POST only.');
-    }
-
-    const db = await collections;
-
-    const gamename = req.query.gamename as string;
-
-    const game = await getOrCreateGame(gamename);
-
-    if (req.method === 'GET') {
-        return res.send(game);
-    } else if (req.method === 'DELETE') {
+export default apiRoute(['gamename'])
+    .get(async (req, res) => {
+        return res.send(await getOrCreateGame(req.params.gamename));
+    })
+    .delete(async (req, res) => {
         return res.send(
             (
-                await db.games.findOneAndUpdate(
-                    { _id: gamename },
-                    { $set: { status: 'prestart', players: [], voting: null } },
+                await req.db.games.findOneAndUpdate(
+                    { _id: req.params.gamename },
+                    { $set: { status: 'prestart', players: [], history: [], votingStatus: null } },
                     { returnOriginal: false },
                 )
             ).value,
         );
-    } else if (req.method === 'POST') {
+    })
+    .post(async (req, res) => {
+        const game = await getOrCreateGame(req.params.gamename);
+
         const optionalRoles: RoleName[] = req.body.optionalRoles ?? [];
         const force = req.body.force;
         if (game.players.length < GameSettings.kMinPlayers) {
@@ -40,10 +36,7 @@ const GameControl: NextApiHandler = async (req, res) => {
         delete startedGame._id;
 
         res.send(
-            (await db.games.findOneAndUpdate({ _id: gamename }, { $set: startedGame }, { returnOriginal: false }))
+            (await req.db.games.findOneAndUpdate({ _id: game._id }, { $set: startedGame }, { returnOriginal: false }))
                 .value,
         );
-    }
-};
-
-export default GameControl;
+    });
