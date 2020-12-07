@@ -42,7 +42,7 @@ export default apiRoute(['gamename', 'playername'])
             return res.status(400).end('Good players are not allowed to vote down a mission (you traitor!)');
         }
         await req.db.games.updateOne(
-            { _id: gamename, 'player.name': playername },
+            { _id: gamename, 'players.name': playername },
             { $set: { 'players.$.vote': vote } },
         );
         return res.send({ vote });

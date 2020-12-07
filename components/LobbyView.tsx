@@ -1,13 +1,13 @@
 import { Typography, Button, Box, Card, CardContent, TextField, Container } from '@material-ui/core';
 import React, { FC, useState, ReactNode } from 'react';
-import { GamePreStart } from '~/lib/db/models';
+import { GameStatus } from '~/lib/db/models';
 import GameSettings from '~/lib/GameSettings';
 import Lobby from '~/lib/Lobby';
 import useWithError from '~/lib/useWithError';
 import FlexGridList from './FlexGridList';
 
 interface LobbyViewProps {
-    game: GamePreStart;
+    game: GameStatus;
     gameName: string;
     playerName: string;
     setPlayerName: (name: string) => void;
@@ -24,7 +24,7 @@ const LobbyView: FC<LobbyViewProps> = ({ game, gameName, playerName, setPlayerNa
         players = <Typography align="center">No players yet!</Typography>;
     }
 
-    const canStart = lobby.players.length >= GameSettings.kMinPlayers;
+    const canStart = lobby.players.length >= GameSettings.kMinPlayers && game.status === 'prestart';
     const acceptingJoins = lobby.players.length <= GameSettings.kMaxPlayers;
     const joined = lobby.players.includes(playerName);
     const isRejoin = lobby.players.includes(proposedName);
@@ -54,7 +54,13 @@ const LobbyView: FC<LobbyViewProps> = ({ game, gameName, playerName, setPlayerNa
         );
     } else {
         button = (
-            <Button variant="contained" color="primary" size="large" onClick={onJoin} disabled={!acceptingJoins}>
+            <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={onJoin}
+                disabled={!acceptingJoins || game.status === 'poststart'}
+            >
                 Join
             </Button>
         );
@@ -108,7 +114,7 @@ const LobbyView: FC<LobbyViewProps> = ({ game, gameName, playerName, setPlayerNa
                             disabled={!canStart}
                             onClick={withError<never>(() => lobby.start())}
                         >
-                            Start Game
+                            {game.status === 'prestart' ? 'Start Game' : 'Game already in progress!'}
                         </Button>
                     </Box>
                 </CardContent>

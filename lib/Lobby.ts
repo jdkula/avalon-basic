@@ -1,12 +1,12 @@
 import Axios from 'axios';
 import { mutate } from 'swr';
-import { GamePreStart } from './db/models';
+import { GamePreStart, GameStatus } from './db/models';
 
 export default class Lobby {
-    constructor(private readonly _game: GamePreStart) {}
+    constructor(private readonly _game: GameStatus) {}
 
     get players(): string[] {
-        return this._game.players.map((p) => p.name);
+        return (this._game as GamePreStart).players.map((p) => p.name);
     }
 
     async join(playerName: string): Promise<string | null> {
