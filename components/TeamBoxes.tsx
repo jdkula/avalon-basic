@@ -4,11 +4,12 @@ import useGame from '~/lib/useGame';
 
 interface TeamBoxesProps {
     team: string[];
+    onlySelected?: boolean;
     max?: number;
     updateTeam?: (newTeam: string[]) => void;
 }
 
-const TeamBoxes: FC<TeamBoxesProps> = ({ team, max, updateTeam }) => {
+const TeamBoxes: FC<TeamBoxesProps> = ({ team, max, updateTeam, onlySelected }) => {
     const game = useGame();
     const atMaxTeam = max !== undefined && team.length >= max;
 
@@ -22,7 +23,9 @@ const TeamBoxes: FC<TeamBoxesProps> = ({ team, max, updateTeam }) => {
         }
     };
 
-    const options = game.players.map((player) => (
+    const players = onlySelected ? team : game.players;
+
+    const options = players.map((player) => (
         <Grid xs item key={player}>
             <FormControlLabel
                 disabled={!updateTeam || (atMaxTeam && !team.includes(player))}
@@ -33,7 +36,7 @@ const TeamBoxes: FC<TeamBoxesProps> = ({ team, max, updateTeam }) => {
     ));
 
     return (
-        <Grid container role="group" aria-label="Team-building Checkboxes">
+        <Grid container role="group" aria-label={`Team Checkboxes. Selected: ${team.join(', ') || 'None'}`}>
             {options}
         </Grid>
     );

@@ -1,8 +1,9 @@
-import { Card, CardContent, Typography, Box, Grid, Divider } from '@material-ui/core';
+import { Card, CardContent, Typography, Box, Divider } from '@material-ui/core';
 import React, { FC, ReactNode } from 'react';
 import useGame from '~/lib/useGame';
 import useWithError from '~/lib/useWithError';
 import TeamBoxes from '../../TeamBoxes';
+import RoundStatus from './RoundStatus';
 import TeamBuilding from './TeamBuilding';
 import Voting from './Voting';
 
@@ -31,51 +32,21 @@ const Gameplay: FC = () => {
         <Card>
             <CardContent>
                 <Box textAlign="center">
-                    <Typography variant="srOnly">
-                        <h6>{`Game Status: Round ${game.currentRoundNumber}, Mission ${
-                            game.currentRound.missions.length
-                        }.${game.isFinalMission ? ' Mission must pass or evil wins.' : ''} Mission leader is ${
-                            game.leader
-                        }`}</h6>
+                    <Typography variant="srOnly" component="h2">
+                        {`Game Status: Round ${game.currentRoundNumber}, Mission ${game.currentRound.missions.length}.${
+                            game.isFinalMission ? ' Mission must pass or evil wins.' : ''
+                        } Mission leader is ${game.leader}`}
                     </Typography>
-                    <Box aria-hidden="true" color={game.isFinalMission ? '#F00' : 'inherit'}>
-                        <Grid container aria-hidden="true">
-                            <Grid item xs={4}>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <Typography>Round</Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        {game.currentRoundNumber}
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <Typography>Leader</Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        {game.leader}
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <Typography>Mission</Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        {game.currentRound.missions.length}
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                    <RoundStatus
+                        isFinalMission={game.isFinalMission}
+                        leader={game.leader}
+                        mission={game.currentRound.missions.length}
+                        round={game.currentRoundNumber}
+                    />
                     <Box mt={2} />
-                    <Divider variant="middle" />
+                    <Divider aria-hidden="true" variant="middle" />
                     <Box mt={2} />
-                    <Typography variant="h6" aria-label={`Current team is ${game.team.join(', ') || '(empty)'}`}>
+                    <Typography variant="h6" component="h3">
                         Current Team:
                     </Typography>
                     {teamBoxes}

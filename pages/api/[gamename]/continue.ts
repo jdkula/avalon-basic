@@ -1,6 +1,7 @@
 import apiRoute from '~/lib/apiRoute';
 import { getOrCreateGame } from '~/lib/db/util';
 import Game from '~/lib/Game';
+import GameSettings from '~/lib/GameSettings';
 
 export default apiRoute(['gamename']).post(async (req, res) => {
     const { gamename } = req.params;
@@ -26,7 +27,23 @@ export default apiRoute(['gamename']).post(async (req, res) => {
         }
     } else if (game.votesShown) {
         // players are currently discussing vote results.
-        if (game.votesShown === 'public') {
+        const noConsensus =
+            game.isFinalMission && game.currentMission.approved.length <= game.currentMission.rejected.length;
+        if (game.votesShown === 'private' || noConsensus) {
+            // players are discussing the result of a mission gone by; moving to the next.
+            // (Or the players rejected the fifth mission in a row, which gives the mission to Evil.)
+            if (game.currentRoundNumber >= GameSettings.get(game.players.length).quests.length) {
+                return res.status(412).send('No more quests! That’s the end of the game!');
+            }
+
+            // new round!
+            game.root.votingStatus = null;
+            game.root.history.push({
+                failed: [],
+                succeeded: [],
+                missions: [{ approved: [], rejected: [], team: [] }],
+            });
+        } else {
             // players are discussing the result of a mission proposal vote; moving onto the next.
             const succeeded = game.currentMission.approved.length > game.currentMission.rejected.length;
             if (succeeded) {
@@ -36,15 +53,6 @@ export default apiRoute(['gamename']).post(async (req, res) => {
                 game.root.votingStatus = null;
                 game.currentRound.missions.push({ approved: [], rejected: [], team: [] });
             }
-        } else {
-            // players are discussing the result of a mission gone by; moving to the next.
-            // new round!
-            game.root.votingStatus = null;
-            game.root.history.push({
-                failed: [],
-                succeeded: [],
-                missions: [{ approved: [], rejected: [], team: [] }],
-            });
         }
         // Clear all votes
         game.root.players = game.root.players.map((p) => ({ ...p, vote: null }));

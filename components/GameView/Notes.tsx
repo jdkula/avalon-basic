@@ -27,7 +27,9 @@ const Notes: FC = () => {
     return (
         <Accordion>
             <AccordionSummary id="accordion2-role" aria-controls="accordion2-role" expandIcon={<ExpandMore />}>
-                <Typography variant="h5">Notes</Typography>
+                <Typography variant="h5" component="span">
+                    Notes
+                </Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <Box textAlign="center" width="100%">

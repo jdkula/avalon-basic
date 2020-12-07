@@ -29,7 +29,7 @@ export default apiRoute(['gamename', 'playername'])
         const game = req.body._game;
         return res.send({ vote: game.myVote });
     })
-    .post(async (req, res) => {
+    .put(async (req, res) => {
         const { gamename, playername } = req.params;
         const game = req.body._game;
 
@@ -42,9 +42,8 @@ export default apiRoute(['gamename', 'playername'])
             return res.status(400).end('Good players are not allowed to vote down a mission (you traitor!)');
         }
         await req.db.games.updateOne(
-            { _id: gamename },
-            { $set: { 'players.$[player].vote': vote } },
-            { arrayFilters: [{ 'player.name': playername }] },
+            { _id: gamename, 'player.name': playername },
+            { $set: { 'players.$.vote': vote } },
         );
         return res.send({ vote });
     })

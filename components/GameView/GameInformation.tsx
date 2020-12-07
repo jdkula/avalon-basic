@@ -12,7 +12,9 @@ const GameInformation: FC = () => {
     return (
         <Accordion>
             <AccordionSummary id="accordion1-game" aria-controls="accordion1-game" expandIcon={<ExpandMore />}>
-                <Typography variant="h5">Game Information</Typography>
+                <Typography variant="h5" component="span">
+                    Game Information
+                </Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <Box textAlign="center" width="100%">

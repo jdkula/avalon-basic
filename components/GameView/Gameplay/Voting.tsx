@@ -16,8 +16,8 @@ const Voting: FC = () => {
     }
     const voteButtons = (
         <>
-            <Typography variant="srOnly">
-                <h6>Vote Buttons</h6>
+            <Typography variant="srOnly" component="h3">
+                Vote Buttons
             </Typography>
             <Grid container justify="space-around">
                 <Grid item>
@@ -59,7 +59,13 @@ const Voting: FC = () => {
         votesView = <Votes show={!!game.votesShown || game.myName} sort={game.votesShown === 'public'} votes={votes} />;
     } else {
         // viewing results of a mission.
-        votesView = <SuccessChips successes={game.yesVotes.length} fails={game.noVotes.length} />;
+        votesView = (
+            <SuccessChips
+                successes={game.yesVotes.length}
+                fails={game.noVotes.length}
+                failsToFail={game.failsRequired}
+            />
+        );
     }
 
     return (

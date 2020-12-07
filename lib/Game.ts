@@ -139,7 +139,7 @@ export default class Game {
         try {
             this.my.vote = vote;
             mutate(`/api/${this._game._id}`, this.root, false);
-            await Axios.post(`/api/${this._game._id}/votes/${this._playerName}`, { vote });
+            await Axios.put(`/api/${this._game._id}/votes/${this._playerName}`, { vote });
             mutate(`/api/${this._game._id}`);
         } catch (e) {
             return e.response.data;

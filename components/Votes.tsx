@@ -42,7 +42,7 @@ const Votes: FC<{ show?: string | boolean; sort?: boolean; votes: { name: string
         );
     });
 
-    return <FlexGridList role="group" aria-label="Current Voting Status" elements={votingStatus} />;
+    return <FlexGridList role="group" aria-label="Votes" elements={votingStatus} />;
 };
 
 export default Votes;

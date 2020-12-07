@@ -13,7 +13,7 @@ const GameView: FC = () => {
     return (
         <Container maxWidth="sm">
             <Box mt={4} />
-            <Typography variant="h3" align="center" gutterBottom>
+            <Typography variant="h3" component="h1" align="center" gutterBottom>
                 <strong>{game.root._id}</strong>’s Avalon Game
             </Typography>
 

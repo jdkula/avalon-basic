@@ -10,9 +10,9 @@ const TeamBuilding: FC = () => {
     return (
         <Box>
             <Box textAlign="center" mt={2}>
-                <Typography>Need to put {game.requiredTeamSize} people on this team.</Typography>
+                <Typography>{game.requiredTeamSize} people will be on this mission.</Typography>
                 {game.failsRequired > 1 && (
-                    <Typography>Need {game.failsRequired} fails to fail this mission.</Typography>
+                    <Typography>{game.failsRequired} fails are required to fail this mission.</Typography>
                 )}
                 <Box mt={2} />
                 <Button
