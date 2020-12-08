@@ -14,6 +14,7 @@ interface InitialProps {
 }
 
 const TheGame: NextPage<InitialProps> = ({ gameName, initialGame }) => {
+    gameName = gameName.toLowerCase();
     const { data: game } = useSWR<GameStatus | null>(`/api/${gameName}`, {
         initialData: initialGame,
         refreshInterval: 1000,

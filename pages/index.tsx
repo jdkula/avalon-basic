@@ -11,7 +11,7 @@ const Index: NextPage = () => {
     const go = (e: { preventDefault: CallableFunction }) => {
         e.preventDefault();
         setWorking(true);
-        router.push(`/game/${gameName}`);
+        router.push(`/game/${gameName.toLowerCase()}`);
     };
 
     return (

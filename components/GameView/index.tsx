@@ -10,11 +10,14 @@ import RoleInformation from './RoleInformation';
 const GameView: FC = () => {
     const game = useGame();
 
+    let name = game.root._id.toLowerCase();
+    name = name[0].toUpperCase() + name.substring(1); // sentence case
+
     return (
         <Container maxWidth="sm">
             <Box mt={4} />
             <Typography variant="h3" component="h1" align="center" gutterBottom>
-                <strong>{game.root._id}</strong>’s Avalon Game
+                <strong>{name}</strong>’s Avalon Game
             </Typography>
 
             <GameInformation />
