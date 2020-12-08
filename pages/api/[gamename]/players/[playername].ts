@@ -4,6 +4,10 @@ import { getOrCreateGame } from '~/lib/db/util';
 import GameSettings from '~/lib/GameSettings';
 
 export default apiRoute(['gamename', 'playername'])
+    .use((req, res, next) => {
+        req.params.gamename = req.params.gamename.toLowerCase();
+        next();
+    })
     .get(async (req, res) => {
         const { gamename } = req.params;
 

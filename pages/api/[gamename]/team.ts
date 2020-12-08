@@ -4,6 +4,10 @@ import { getOrCreateGame } from '~/lib/db/util';
 import Game from '~/lib/Game';
 
 export default apiRoute(['gamename'])
+    .use((req, res, next) => {
+        req.params.gamename = req.params.gamename.toLowerCase();
+        next();
+    })
     .all(async (req, res, next) => {
         const gameStub = await getOrCreateGame(req.params.gamename);
         if (gameStub.status === 'prestart') {

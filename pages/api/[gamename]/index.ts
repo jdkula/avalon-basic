@@ -4,6 +4,10 @@ import GameSettings from '~/lib/GameSettings';
 import Roles, { RoleName } from '~/lib/Roles';
 
 export default apiRoute(['gamename'])
+    .use((req, res, next) => {
+        req.params.gamename = req.params.gamename.toLowerCase();
+        next();
+    })
     .get(async (req, res) => {
         return res.send(await getOrCreateGame(req.params.gamename));
     })

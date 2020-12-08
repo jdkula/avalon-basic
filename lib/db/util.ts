@@ -2,6 +2,8 @@ import database from './collections';
 import { GameStatus } from './models';
 
 export async function getOrCreateGame(gameName: string): Promise<GameStatus> {
+    gameName = gameName.toLowerCase();
+
     const db = await database();
     const { value: game } = await db.games.findOneAndUpdate(
         { _id: gameName },
