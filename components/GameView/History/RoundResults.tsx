@@ -19,7 +19,7 @@ const RoundResults: FC<{ round: Round; num: number; numPlayers: number }> = ({ r
 
     const missions = round.missions
         .slice(0, round.missions.length + delta)
-        .map((mission, i) => <MissionResults key={i} mission={mission} num={i} />)
+        .map((mission, i) => <MissionResults key={i} mission={mission} num={i} roundNum={num} />)
         .reverse();
 
     let result: ReactNode;

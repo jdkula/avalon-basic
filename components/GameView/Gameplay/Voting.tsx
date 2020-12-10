@@ -68,6 +68,11 @@ const Voting: FC = () => {
         );
     }
 
+    const canContinue =
+        (game.root.votingStatus === null && game.myName === game.leader) ||
+        (game.voting && game.myName === game.leader && game.voters.length === game.allowedVoters.length) ||
+        game.votesShown;
+
     return (
         <Box>
             <Typography variant="h6" align="center" aria-label="Voting Results">
@@ -82,10 +87,7 @@ const Voting: FC = () => {
                 <Button
                     variant="outlined"
                     color="primary"
-                    disabled={
-                        game.leader !== game.myName ||
-                        (!game.votesShown && game.voters.length !== game.allowedVoters.length)
-                    }
+                    disabled={!canContinue}
                     onClick={withError<never>(() => game.continue())}
                 >
                     {game.voting ? 'Finish Voting' : 'Finish Discussing'}
