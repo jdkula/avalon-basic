@@ -32,7 +32,7 @@ const Gameplay: FC = () => {
         <Card>
             <CardContent>
                 <Box textAlign="center">
-                    <Typography variant="srOnly" component="h2">
+                    <Typography variant="srOnly" component="h2" aria-live="polite" aria-atomic="true">
                         {`Game Status: Round ${game.currentRoundNumber}, Mission ${game.currentRound.missions.length}.${
                             game.isFinalMission ? ' Mission must pass or evil wins.' : ''
                         } Mission leader is ${game.leader}`}
@@ -46,7 +46,13 @@ const Gameplay: FC = () => {
                     <Box mt={2} />
                     <Divider aria-hidden="true" variant="middle" />
                     <Box mt={2} />
-                    <Typography variant="h6" component="h3">
+                    <Typography
+                        variant="h6"
+                        component="h3"
+                        aria-live="polite"
+                        aria-atomic="true"
+                        aria-label={`Current Team: ${game.team.join(', ') || 'None'}`}
+                    >
                         Current Team:
                     </Typography>
                     {teamBoxes}

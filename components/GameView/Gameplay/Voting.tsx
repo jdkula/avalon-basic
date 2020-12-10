@@ -16,7 +16,7 @@ const Voting: FC = () => {
     }
     const voteButtons = (
         <>
-            <Typography variant="srOnly" component="h3">
+            <Typography variant="srOnly" component="h3" aria-live="polite">
                 Vote Buttons
             </Typography>
             <Grid container justify="space-around">
@@ -79,7 +79,9 @@ const Voting: FC = () => {
                 Voting:
             </Typography>
             <Box mt={2} />
-            {votesView}
+            <Box aria-atomic="true" aria-live="polite">
+                {votesView}
+            </Box>
             <Box mt={2} />
             {game.voting && game.allowedVoters.includes(game.myName) && voteButtons}
             <Box mt={2} />

@@ -23,7 +23,14 @@ const RoleInformation: FC = () => {
                 </Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Box textAlign="center" width="100%" role="region" aria-label="Role Details">
+                <Box
+                    textAlign="center"
+                    width="100%"
+                    role="region"
+                    aria-label="Role Details"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
                     <Typography component="h2">Your Role is: {game.myRole.name}</Typography>
                     <Box mt={2} />
                     {knowledge.length ? knowledge : 'You don’t know anything!'}
