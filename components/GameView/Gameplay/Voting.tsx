@@ -34,6 +34,7 @@ const Voting: FC = () => {
                     <Button
                         variant={game.myVote === false ? 'contained' : 'outlined'}
                         color={game.isFinalMission ? 'secondary' : 'primary'}
+                        disabled={game.voting === 'mission' && game.myRole.side === 'good'}
                         onClick={withError<never>(() => game.vote(false))}
                         aria-label={noLabel}
                     >
@@ -79,9 +80,7 @@ const Voting: FC = () => {
                 Voting:
             </Typography>
             <Box mt={2} />
-            <Box aria-atomic="true" aria-live="polite">
-                {votesView}
-            </Box>
+            {votesView}
             <Box mt={2} />
             {game.voting && game.allowedVoters.includes(game.myName) && voteButtons}
             <Box mt={2} />
