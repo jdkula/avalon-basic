@@ -10,6 +10,11 @@ const MissionResults: FC<{ mission: Mission; num: number; roundNum: number }> = 
     const turnNumber =
         game.root.history.filter((_, i) => i < roundNum).reduce((total, round) => total + round.missions.length, 0) +
         num;
+
+    const noConsensus =
+        game.root.history[roundNum].succeeded.length === game.root.history[roundNum].failed.length &&
+        game.root.history[roundNum].succeeded.length === 0;
+    const isLast = num === game.root.history[roundNum].missions.length - 1;
     const leader = game.players[turnNumber % game.players.length];
     const players: { name: string; vote: null | boolean }[] = game.players.map((p) => ({
         name: p,
@@ -18,7 +23,7 @@ const MissionResults: FC<{ mission: Mission; num: number; roundNum: number }> = 
     return (
         <ListItem divider key={num}>
             <Box textAlign="center" width="100%">
-                <Typography>
+                <Typography color={isLast && !noConsensus ? 'primary' : 'inherit'}>
                     Mission {num + 1} (Leader: {leader})
                 </Typography>
                 <TeamBoxes team={mission.team} onlySelected />
