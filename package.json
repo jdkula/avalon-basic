@@ -11,10 +11,10 @@
     "dependencies": {
         "@material-ui/core": "^4.11.2",
         "@material-ui/icons": "^4.11.2",
-        "@types/lodash": "^4.14.165",
+        "@types/lodash": "^4.17.21",
         "@types/styled-components": "^5.1.4",
         "axios": "^0.30.2",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
         "mongodb": "^3.6.3",
         "next": "14.2.32",
         "next-connect": "^0.9.1",
