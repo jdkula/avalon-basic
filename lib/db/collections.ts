@@ -5,7 +5,7 @@ import { GameStatus } from './models';
 import { mongoClient } from './mongo';
 
 const connection: Promise<void> = (async () => {
-    if (!mongoClient.isConnected()) await mongoClient.connect();
+    await mongoClient.connect();
 })();
 
 export interface Collections {

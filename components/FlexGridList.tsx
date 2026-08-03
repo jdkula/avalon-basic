@@ -3,7 +3,7 @@ import React, { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 const FlexGridListItemContainer = styled(Paper)<{ $gray?: boolean }>`
-    padding: ${({ theme }) => theme.spacing(1)}px;
+    padding: 4px;
     background-color: ${({ $gray }) => ($gray ? '#f0f0f0' : '#fff')};
 `;
 

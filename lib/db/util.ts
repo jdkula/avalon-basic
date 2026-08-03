@@ -5,13 +5,13 @@ export async function getOrCreateGame(gameName: string): Promise<GameStatus> {
     gameName = gameName.toLowerCase();
 
     const db = await database();
-    const { value: game } = await db.games.findOneAndUpdate(
+    const res = await db.games.findOneAndUpdate(
         { _id: gameName },
         {
             $setOnInsert: { players: [], status: 'prestart', history: [], votingStatus: null },
         },
-        { upsert: true, returnOriginal: false },
+        { upsert: true, returnDocument: 'before' },
     );
 
-    return game;
+    return res;
 }

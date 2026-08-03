@@ -6,13 +6,13 @@ export default apiRoute(['gamename'])
         next();
     })
     .post(async (req, res) => {
-        const { value: game } = await req.db.games.findOneAndUpdate(
+        const game = await req.db.games.findOneAndUpdate(
             { _id: req.params.gamename },
             {
                 $setOnInsert: { players: [] },
                 $set: { status: 'prestart', history: [], votingStatus: null },
             },
-            { upsert: true, returnOriginal: false },
+            { upsert: true, returnDocument: 'before' },
         );
 
         return res.send(game);

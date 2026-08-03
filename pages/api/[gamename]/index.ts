@@ -17,9 +17,9 @@ export default apiRoute(['gamename'])
                 await req.db.games.findOneAndUpdate(
                     { _id: req.params.gamename },
                     { $set: { status: 'prestart', players: [], history: [], votingStatus: null } },
-                    { returnOriginal: false },
+                    { returnDocument: 'before' },
                 )
-            ).value,
+            ),
         );
     })
     .post(async (req, res) => {
@@ -38,7 +38,6 @@ export default apiRoute(['gamename'])
         delete startedGame._id;
 
         res.send(
-            (await req.db.games.findOneAndUpdate({ _id: game._id }, { $set: startedGame }, { returnOriginal: false }))
-                .value,
+            (await req.db.games.findOneAndUpdate({ _id: game._id }, { $set: startedGame }, { returnDocument: 'before' })),
         );
     });
